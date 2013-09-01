@@ -24,7 +24,7 @@ bkcore.hexgl.HexGL = function(opts)
 	this.width = opts.width == undefined ? window.innerWidth : opts.width;
 	this.height = opts.height == undefined ? window.innerHeight : opts.height;
 
-	this.quality = opts.quality == undefined ? 2 : opts.quality;
+	this.quality = opts.quality == undefined ? 0 : opts.quality;
 	this.difficulty = opts.difficulty == undefined ? 0 : opts.difficulty;
 	this.player = opts.player == undefined ? "Anonym" : opts.player;
 

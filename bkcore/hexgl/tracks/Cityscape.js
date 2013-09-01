@@ -298,7 +298,7 @@ bkcore.hexgl.tracks.Cityscape = {
 		var ambient = 0xbbbbbb, diffuse = 0xffffff, specular = 0xffffff, shininess = 42, scale = 23;
 
 		// MAIN SCENE		
-		var camera = new THREE.PerspectiveCamera( 70, ctx.width / ctx.height, 1, 60000 );
+		var camera = new THREE.PerspectiveCamera( 70, ctx.width/2 / ctx.height, 1, 60000 );
 		
 		var scene = new THREE.Scene();
 		scene.add( camera );
@@ -399,11 +399,17 @@ bkcore.hexgl.tracks.Cityscape = {
 			viewOffset: 10.0
 		});
 
+		var win = {
+			width: window.innerWidth,
+			height: window.innerHeight
+		}
+
 		ctx.manager.add("game", scene, camera, function(delta, renderer)
 		{
 			if(delta > 25 && this.objects.lowFPS < 1000) this.objects.lowFPS++;
 
 			var dt = delta/16.6;
+			var camera = this.objects.components.cameraChase.camera;
 
 			this.objects.components.shipControls.update(dt);
 			
@@ -420,7 +426,17 @@ bkcore.hexgl.tracks.Cityscape = {
 			c.lookAt(this.objects.components.shipControls.dummy.position);
 			this.objects.components.cameraChase.cameraCube.rotation.copy(c.rotation);*/
 
+			renderer.setScissor( 0, 0, win.width, win.height);
+			renderer.setViewport( 0, 0, win.width/2, win.height);
+			camera.position.x += 1;
+			renderer.enableScissorTest ( true );
 			this.objects.composers.game.render(dt);
+
+			renderer.setViewport( win.width/2, 0, win.width/2, win.height);
+			camera.position.x -= 2;
+			renderer.enableScissorTest ( true );
+			this.objects.composers.game.render(dt);
+
 			this.objects.hud.update(
 				this.objects.components.shipControls.getRealSpeed(100), 
 				this.objects.components.shipControls.getRealSpeedRatio(), 
